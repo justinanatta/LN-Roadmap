@@ -121,9 +121,41 @@
     margin-top: 44px;
   }
   .gantt {
+    --label-col: 280px;
     min-width: 1200px;
     width: 100%;
     position: relative;
+  }
+
+  .col-resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--label-col);
+    width: 9px;
+    margin-left: -4px;
+    cursor: col-resize;
+    z-index: 20;
+    background: transparent;
+    touch-action: none;
+  }
+  .col-resizer::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 3px;
+    height: 36px;
+    background: var(--rule);
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  .col-resizer:hover::after,
+  .col-resizer.dragging::after {
+    opacity: 1;
+    background: var(--ink-mid);
   }
 
   /* TODAY LINE */
@@ -200,7 +232,7 @@
 
   .row {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: var(--label-col, 280px) 1fr;
   }
   .row-label {
     padding: 8px 16px;
@@ -695,8 +727,39 @@
     font-weight: 500;
   }
 
-  @media (max-width: 640px) {
-    body { padding: 24px 12px 48px; }
+  @media (max-width: 768px) {
+    body { padding: 16px 12px 40px; font-size: 13px; }
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+    .topbar-actions { margin-left: 0; }
+    .topbar-meta { order: 3; }
+    .title-block { margin-bottom: 24px; }
+    h1.title { font-size: 22px; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .subtitle { font-size: 12px; line-height: 1.4; }
+    .gantt-wrap { margin-top: 24px; }
+    .gantt { --label-col: 160px; min-width: 900px; }
+    .row-label { padding: 6px 8px; font-size: 11px; }
+    .row-label.indented { padding-left: 18px; }
+    .row-label.sub-indented { padding-left: 28px; font-size: 11px; }
+    .row-label .row-meta { display: none; }
+    .row-label .label-top { gap: 6px; }
+    .row-label .id, .row-label a.id { font-size: 9px; padding: 1px 4px; }
+    .bar { font-size: 10px; min-height: 22px; }
+    .bar-type { font-size: 8px; padding: 1px 4px; }
+    .bar-label { font-size: 10px; }
+    .sprint-band { font-size: 9px; padding: 4px 6px; }
+    .col-resizer { width: 14px; margin-left: -7px; }
+    .col-resizer::after { opacity: 1; background: var(--rule); height: 24px; }
+    .legend { flex-direction: column; gap: 8px; padding: 16px 12px; }
+    .legend-group { border-right: none !important; padding-right: 0; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+    .legend-group:last-child { border-bottom: none; padding-bottom: 0; }
+    .today-flag { font-size: 9px; padding: 3px 6px 2px; top: -22px; }
+    footer { font-size: 10px; margin-top: 32px; padding-top: 16px; }
   }
 </style>
 </head>
@@ -727,6 +790,8 @@
           <span class="today-flag-day">Day <span id="dayNum">33</span>/90</span>
         </div>
       </div>
+
+      <div class="col-resizer" id="colResizer" title="Drag to resize label column"></div>
 
       <!-- Sprint band row -->
       <div class="row sprint-row">
@@ -802,7 +867,37 @@
         </summary>
         <div class="row">
           <div class="row-label indented">
+            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-74" target="_blank" rel="noopener">Global Cart Layout</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-74" target="_blank" rel="noopener">LN-74</a></span>
+            <span class="row-meta">Shipped in v1.5 · 6/30</span>
+          </div>
+          <div class="row-track">
+            <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="bar done" style="grid-column: 1 / 4;" title="Shipped 6/30"><span class="bar-type">IMPL</span><span class="bar-label">Shipped</span></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label indented">
+            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-75" target="_blank" rel="noopener">Free Shipping Ticker</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-75" target="_blank" rel="noopener">LN-75</a></span>
+            <span class="row-meta">Shipped in v1.5 · 6/30</span>
+          </div>
+          <div class="row-track">
+            <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="bar done" style="grid-column: 1 / 4;" title="Shipped 6/30"><span class="bar-type">IMPL</span><span class="bar-label">Shipped</span></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label indented">
             <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-76" target="_blank" rel="noopener">Cart Line Items</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-76" target="_blank" rel="noopener">LN-76</a></span>
+            <span class="row-meta">Shipped in v1.5 · 6/30</span>
+          </div>
+          <div class="row-track">
+            <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="bar done" style="grid-column: 1 / 4;" title="Shipped 6/30"><span class="bar-type">IMPL</span><span class="bar-label">Shipped</span></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label indented">
+            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-77" target="_blank" rel="noopener">Frequently Bought Together + Best Sellers</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-77" target="_blank" rel="noopener">LN-77</a></span>
             <span class="row-meta">Shipped in v1.5 · 6/30</span>
           </div>
           <div class="row-track">
@@ -818,16 +913,6 @@
           <div class="row-track">
             <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
             <div class="bar done" style="grid-column: 1 / 4;" title="Shipped 6/30"><span class="bar-type">IMPL</span><span class="bar-label">Shipped</span></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="row-label indented">
-            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-68" target="_blank" rel="noopener">Cart Total Savings</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-68" target="_blank" rel="noopener">LN-68</a></span>
-            <span class="row-meta">Shipped in v1.5 · 6/30</span>
-          </div>
-          <div class="row-track">
-            <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            <div class="bar done" style="grid-column: 2 / 4;" title="Shipped 6/30"><span class="bar-type">IMPL</span><span class="bar-label">Shipped</span></div>
           </div>
         </div>
       </details>
@@ -910,7 +995,7 @@
           <div class="row-label">Q2 Experimentation <a class="group-id" href="https://anatta-io.atlassian.net/browse/LN-61" target="_blank" rel="noopener">LN-61</a></div>
           <div class="row-track">
             <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            <div class="bar experiments epic" style="grid-column: 3 / 7;"><span class="bar-type">TEST</span>Experimentation <span class="bar-status">tests through Sprint 6</span></div>
+            <div class="bar experiments epic" style="grid-column: 3 / 11;"><span class="bar-type">TEST</span>Experimentation <span class="bar-status">4 tests through Sprint 8</span></div>
           </div>
         </summary>
         <div class="row">
@@ -935,42 +1020,52 @@
         </div>
         <div class="row">
           <div class="row-label indented">
-            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-94" target="_blank" rel="noopener">PDP Bundle Builder vs Reviews</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-94" target="_blank" rel="noopener">LN-94</a></span>
-            <span class="row-meta">Dev then 2-week test</span>
+            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-99" target="_blank" rel="noopener">HP Content Hierarchy</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-99" target="_blank" rel="noopener">LN-99</a></span>
+            <span class="row-meta">Test #1 · flipped IMPL → TEST · Intelligems setup in progress</span>
           </div>
           <div class="row-track">
             <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            <div class="bar experiments crosses" style="grid-column: 2 / 6; --past: 25%;" title="Dev → 2-week test"><span class="bar-type">TEST</span><span class="bar-label">2-wk test</span></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="row-label indented">
-            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-95" target="_blank" rel="noopener">Checkout USP Icons</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-95" target="_blank" rel="noopener">LN-95</a></span>
-            <span class="row-meta">Blocked · Intelligems mobile-render bug · open vendor ticket</span>
-          </div>
-          <div class="row-track">
-            <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            <div class="bar experiments" style="grid-column: 3 / 7;" title="Blocked · Intelligems mobile bug"><span class="bar-type">TEST</span><span class="bar-label">Blocked</span></div>
+            <div class="bar experiments" style="grid-column: 3 / 5;" title="Test #1 · Sprint 5"><span class="bar-type">TEST</span><span class="bar-label">2-wk test</span></div>
           </div>
         </div>
         <div class="row">
           <div class="row-label indented">
             <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-64" target="_blank" rel="noopener">PDP Mobile Gallery Thumbnails</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-64" target="_blank" rel="noopener">LN-64</a></span>
-            <span class="row-meta">Dev → test</span>
+            <span class="row-meta">Test #2 · promoted while LN-94 is re-scoped</span>
           </div>
           <div class="row-track">
             <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            <div class="bar experiments" style="grid-column: 4 / 7;" title="Dev → test"><span class="bar-type">TEST</span><span class="bar-label">Dev → test</span></div>
+            <div class="bar experiments" style="grid-column: 5 / 7;" title="Test #2 · Sprint 6"><span class="bar-type">TEST</span><span class="bar-label">2-wk test</span></div>
           </div>
         </div>
         <div class="row">
           <div class="row-label indented">
-            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-99" target="_blank" rel="noopener">HP Content Hierarchy</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-99" target="_blank" rel="noopener">LN-99</a></span>
-            <span class="row-meta">Flipped IMPL → TEST · Baron setup in Intelligems today</span>
+            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-68" target="_blank" rel="noopener">Cart Total Savings Activated</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-68" target="_blank" rel="noopener">LN-68</a></span>
+            <span class="row-meta">Test #3 · already built, awaiting Intelligems setup</span>
           </div>
           <div class="row-track">
             <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            <div class="bar experiments" style="grid-column: 3 / 5;" title="Flipped IMPL → TEST · Baron setup today"><span class="bar-type">TEST</span><span class="bar-label">2-wk test</span></div>
+            <div class="bar experiments" style="grid-column: 7 / 9;" title="Test #3 · Sprint 7"><span class="bar-type">TEST</span><span class="bar-label">2-wk test</span></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label indented">
+            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-95" target="_blank" rel="noopener">Checkout USP Icons</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-95" target="_blank" rel="noopener">LN-95</a></span>
+            <span class="row-meta">Test #4 · scope expanded by Brad · social proof, ships 1-day, reviews slider, star rating</span>
+          </div>
+          <div class="row-track">
+            <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="bar experiments" style="grid-column: 9 / 11;" title="Test #4 · Sprint 8 · runs into Contract End"><span class="bar-type">TEST</span><span class="bar-label">2-wk test</span></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label indented">
+            <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-94" target="_blank" rel="noopener">PDP Bundle Builder vs Reviews</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-94" target="_blank" rel="noopener">LN-94</a></span>
+            <span class="row-meta">Pivot · re-scope as cross-sell component pending Sebi</span>
+          </div>
+          <div class="row-track">
+            <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="bar proposed" style="grid-column: 3 / 5;" title="Pivot pending Sebi decision"><span class="bar-type">CONV</span><span class="bar-label">Pivot</span></div>
           </div>
         </div>
       </details>
@@ -986,21 +1081,21 @@
         <div class="row">
           <div class="row-label indented">
             <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-67" target="_blank" rel="noopener">HP Mobile CTA Above Fold</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-67" target="_blank" rel="noopener">LN-67</a></span>
-            <span class="row-meta">Above-fold CTA implementation</span>
+            <span class="row-meta">Bundled HP release with LN-100</span>
           </div>
           <div class="row-track">
             <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            <div class="bar implementations" style="grid-column: 3 / 5;" title="Sprint 5"><span class="bar-type">IMPL</span><span class="bar-label">Sprint 5</span></div>
+            <div class="bar implementations" style="grid-column: 3 / 5;" title="Bundled HP release · Sprint 5"><span class="bar-type">IMPL</span><span class="bar-label">Sprint 5</span></div>
           </div>
         </div>
         <div class="row">
           <div class="row-label indented">
             <span class="label-top"><a href="https://anatta-io.atlassian.net/browse/LN-100" target="_blank" rel="noopener">HP CTA → PLP</a><a class="id" href="https://anatta-io.atlassian.net/browse/LN-100" target="_blank" rel="noopener">LN-100</a></span>
-            <span class="row-meta">Quick copy + link destination change</span>
+            <span class="row-meta">Bundled HP release with LN-67</span>
           </div>
           <div class="row-track">
             <div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-            <div class="bar implementations" style="grid-column: 3 / 4;" title="Sprint 5 · quick"><span class="bar-type">IMPL</span><span class="bar-label">Sprint 5</span></div>
+            <div class="bar implementations" style="grid-column: 3 / 5;" title="Bundled HP release · Sprint 5"><span class="bar-type">IMPL</span><span class="bar-label">Sprint 5</span></div>
           </div>
         </div>
         <div class="row">
@@ -1189,7 +1284,7 @@
       var line = document.getElementById('todayLine');
       var gantt = document.querySelector('.gantt');
       if (line && gantt) {
-        var labelW = 280;
+        var labelW = parseInt(getComputedStyle(gantt).getPropertyValue('--label-col'), 10) || 280;
         var ganttW = gantt.offsetWidth;
         var timelineW = ganttW - labelW;
         line.style.left = (labelW + timelineW * pct) + 'px';
@@ -1210,6 +1305,47 @@
       // Prevent summary anchor clicks from toggling the accordion
       document.querySelectorAll('summary.row a').forEach(function(a) {
         a.addEventListener('click', function(e) { e.stopPropagation(); });
+      });
+
+      bindColResizer();
+    }
+
+    function bindColResizer() {
+      var resizer = document.getElementById('colResizer');
+      var gantt = document.querySelector('.gantt');
+      if (!resizer || !gantt) return;
+
+      var MIN = 200, MAX = 600;
+      var saved = parseInt(localStorage.getItem('ln-roadmap-label-col'), 10);
+      if (!isNaN(saved) && saved >= MIN && saved <= MAX) {
+        gantt.style.setProperty('--label-col', saved + 'px');
+      }
+
+      resizer.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        var startX = e.clientX;
+        var startW = parseInt(getComputedStyle(gantt).getPropertyValue('--label-col'), 10) || 280;
+        resizer.classList.add('dragging');
+        try { resizer.setPointerCapture(e.pointerId); } catch (_) {}
+        document.body.style.userSelect = 'none';
+        document.body.style.cursor = 'col-resize';
+
+        function onMove(ev) {
+          var newW = Math.max(MIN, Math.min(MAX, startW + (ev.clientX - startX)));
+          gantt.style.setProperty('--label-col', newW + 'px');
+          update();
+        }
+        function onUp() {
+          resizer.classList.remove('dragging');
+          document.body.style.userSelect = '';
+          document.body.style.cursor = '';
+          var finalW = parseInt(getComputedStyle(gantt).getPropertyValue('--label-col'), 10);
+          if (finalW) localStorage.setItem('ln-roadmap-label-col', finalW);
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+        }
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
       });
     }
 
