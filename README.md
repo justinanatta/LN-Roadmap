@@ -2,6 +2,10 @@
 
 Static visual roadmap for Llama Naturals × Anatta. Single-file gantt with sprint banding, task-type pills (IMPL / TEST / BUG / SPIKE / CONV), today line, and day-of-N counter.
 
+## Live
+
+https://ln-roadmap-anatta.vercel.app/
+
 ## Deploy
 
 Vercel auto-deploys `index.html` from `main` as a static site. No build step.
