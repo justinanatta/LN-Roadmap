@@ -631,8 +631,16 @@
   }
 
   /* LEGEND */
-  .legend {
+  .legend-note {
     margin-top: 28px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    max-width: 760px;
+  }
+  .legend {
+    margin-top: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 20px 28px;
@@ -780,7 +788,7 @@
 
   <div class="title-block">
     <h1 class="title">Llama Naturals Optimization Roadmap</h1>
-    <p class="subtitle">Click any row title to open its Jira ticket. Click a group header to collapse or expand its swimlane. Task-type pills (IMPL / TEST / BUG / SPIKE / CONV) sit at the start of each bar. Bar treatments are explained in the legend below.</p>
+    <p class="subtitle">In-flight work, proposed tests, shipped releases, and milestones across the Llama Naturals engagement.</p>
   </div>
 
   <div class="gantt-wrap">
@@ -1225,6 +1233,8 @@
 
     </div>
   </div>
+
+  <p class="legend-note">Click any row title to open its Jira ticket. Click group headers to collapse or expand swimlanes. Task-type pills (IMPL / TEST / BUG / SPIKE / CONV) appear at the start of each bar.</p>
 
   <div class="legend">
     <div class="legend-group">
