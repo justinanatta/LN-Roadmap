@@ -1224,6 +1224,10 @@
       init();
     }
     window.addEventListener('resize', update);
+    setInterval(update, 60000);
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) update();
+    });
   })();
 </script>
 </body>
