@@ -1400,9 +1400,24 @@
       });
     }
 
+    function scheduleUpdate() {
+      requestAnimationFrame(update);
+    }
+
     function init() {
       update();
       bindControls();
+      scheduleUpdate();
+
+      var gantt = document.querySelector('.gantt');
+      if (gantt && typeof ResizeObserver !== 'undefined') {
+        var ro = new ResizeObserver(scheduleUpdate);
+        ro.observe(gantt);
+      }
+
+      if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
+        document.fonts.ready.then(scheduleUpdate);
+      }
     }
 
     if (document.readyState === 'loading') {
@@ -1410,7 +1425,8 @@
     } else {
       init();
     }
-    window.addEventListener('resize', update);
+    window.addEventListener('load', scheduleUpdate);
+    window.addEventListener('resize', scheduleUpdate);
     setInterval(update, 60000);
     document.addEventListener('visibilitychange', function() {
       if (!document.hidden) update();
