@@ -44,7 +44,7 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .page { max-width: 100%; margin: 0 auto; }
+  .page { max-width: 1720px; margin: 0 auto; }
 
   .topbar {
     display: flex;
@@ -199,6 +199,10 @@
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
     border-top: 5px solid var(--today);
+  }
+  .today-flag-date {
+    font-weight: 700;
+    letter-spacing: 0.06em;
   }
   .today-flag-day {
     font-weight: 500;
@@ -394,8 +398,7 @@
     color: var(--ink-mid);
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding-left: 6px;
+    justify-content: center;
     border-right: 1px solid var(--rule);
     letter-spacing: 0.04em;
     font-weight: 500;
@@ -798,6 +801,7 @@
       <div class="today-line" id="todayLine">
         <div class="today-flag">
           <span>TODAY</span>
+          <span class="today-flag-date" id="todayDate">Jul 2</span>
           <span class="today-flag-day">Day <span id="dayNum">33</span>/90</span>
         </div>
       </div>
@@ -1311,6 +1315,8 @@
     var ganttStart = new Date('2026-06-15T00:00:00');
     var ganttEnd = new Date('2026-08-30T00:00:00');
 
+    var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
     function update() {
       var today = new Date();
       var dayOf90 = Math.max(1, Math.min(90, Math.floor((today - noticeStart) / 86400000) + 1));
@@ -1319,6 +1325,8 @@
       if (dayNum) dayNum.textContent = dayOf90;
       var dayMeta = document.getElementById('dayMeta');
       if (dayMeta) dayMeta.textContent = 'Day ' + dayOf90 + ' / 90';
+      var todayDate = document.getElementById('todayDate');
+      if (todayDate) todayDate.textContent = MONTHS[today.getMonth()] + ' ' + today.getDate();
 
       var elapsed = (today - ganttStart) / 86400000;
       var totalSpan = (ganttEnd - ganttStart) / 86400000;
