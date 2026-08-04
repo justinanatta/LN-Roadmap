@@ -1,0 +1,60 @@
+{
+  "_note": "PATHS: transcripts_dir and audit_output_dir are resolved against the repo root when relative. Keep them relative so this config works on any PM's machine. A leading '~' is NOT expanded and is an error, not a fallback.",
+  "client_name": "Llama Naturals",
+  "client_key": "ln",
+  "html_file": "index.html",
+  "live_url": "https://ln-roadmap-anatta.vercel.app/",
+  "review_branch": "draft",
+  "preview_port": 8747,
+  "transcripts_dir": "../project/transcripts/",
+  "jira": {
+    "site": "anatta-io.atlassian.net",
+    "project": "LN",
+    "visibility": {
+      "mode": "config",
+      "note": "Read-only in the client's Jira. Never label, edit, transition or comment. Seeded from the keys already on the published board, so nothing new became visible.",
+      "include_parents": [],
+      "include_keys": [
+        "LN-56",
+        "LN-57",
+        "LN-58",
+        "LN-64",
+        "LN-67",
+        "LN-68",
+        "LN-71",
+        "LN-72",
+        "LN-73",
+        "LN-74",
+        "LN-75",
+        "LN-76",
+        "LN-77",
+        "LN-78",
+        "LN-88",
+        "LN-94",
+        "LN-95",
+        "LN-97",
+        "LN-98",
+        "LN-99",
+        "LN-100",
+        "LN-103",
+        "LN-104",
+        "LN-107",
+        "LN-108",
+        "LN-109"
+      ],
+      "exclude_keys": []
+    },
+    "lanes": {},
+    "progress": [],
+    "api_token_ref": null
+  },
+  "deploy": {
+    "allow": []
+  },
+  "deep_sources": {
+    "tracker_file": null,
+    "confluence_space": null,
+    "slack_channels": []
+  },
+  "audit_output_dir": "../audits/"
+}
