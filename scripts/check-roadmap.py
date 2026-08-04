@@ -59,7 +59,7 @@ PLACEHOLDERS = ["SETUP:", "YOURORG", "Sample Client", "PROJ-"]
 # a file and is silent when nobody remembers, which is the failure being closed.
 REQUIRED_IGNORE = ["*.md", ".claude/", ".github/", "scripts/",
                    "roadmap.config.json", "roadmap.config.example.json",
-                   ".roadmap/"]
+                   ".roadmap/", ".gitignore"]
 # Committed, not ignored, and verified not served: Vercel does not publish the
 # ignore file itself (probed 404 on the one repo that commits it).
 ALWAYS_ALLOWED = {".vercelignore"}
